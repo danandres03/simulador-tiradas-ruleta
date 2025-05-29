@@ -157,7 +157,7 @@ class Estrategia:
 
     def stupid(self, resultados: list, jugadas: int, balance: float, apuesta: float)-> list:
         """
-        Simula la estrategia de stupid
+        Simula la estrategia stupid, apostar siempre al 0
         """
         while jugadas != 0:
             balance -= apuesta

@@ -40,8 +40,8 @@ Este simulador permite probar diferentes estrategias de apuestas en la ruleta, c
   7. Stupid
   8. Fibonacci
 - Configuración dinámica de parámetros (balance, apuesta, secuencia, jugadas, simulaciones).
-- Gráficas de trayectorias, bandas de confianza, histograma, boxplot, violinplot y tiempo hasta quiebra.
-- Cálculos estadísticos (media, medianas, percentiles, varianza, probabilidad de quiebra) con Polars para aprovechar multithreading.
+- Gráficas de trayectorias y confianza.
+- Cálculos estadísticos con Polars para aprovechar multithreading.
 
 ## Estructura del proyecto
 

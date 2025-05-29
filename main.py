@@ -7,17 +7,13 @@ Las estrategias disponibles son:
 - D'alembert
 - Paroli (Inverse Martingale)
 - Labouchere
-- stupid
+- Stupid
 - Fibonacci
 
 Se pide al usuario que decida la estrategia e ingrese los datos necesarios para la simulación.
 El script luego simula la estrategia y grafica los resultados.
 
 El gráfico después representa la evolución del balance conforme a las tiradas de la ruleta, siendo cada linea una simulación
-
-El script requiero los siguientes imports:
-- estrategias
-- matplotlib.pyplot
 """
 from estrategias import Estrategia
 from ruleta import Ruleta
