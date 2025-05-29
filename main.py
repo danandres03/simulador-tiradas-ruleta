@@ -21,100 +21,165 @@ El script requiero los siguientes imports:
 """
 from estrategias import Estrategia
 from ruleta import Ruleta
-from graficos import plot
+from graficos import *
 
-menu = """
-------MENU PRINCIPAL------
-Elija la estrategia que desea utilizar
-1. Martingala
-2. Docena
-3. James Bond
-4. D'alembert
-5. Paroli (Martingala inversa)
-6. Labouchere
-7. Retarded
-8. Fibonacci
-Otro. Salir
---------------------------
-"""
+# Funciones para recoger inputs según estrategia
 
-if __name__ == "__main__":
-    print(menu)
-    secuenciaref = None
-    objetivo = 0
-    balanceref = None
-    apuestaref = None
-    while True:
-        opcion = input("Ingrese la estrategia: ")
-        try:
-            opcion = int(opcion)
-            if opcion >= 1 and opcion <= 8:
-                break
-            else:
-                print("Opción inválida")
-        except ValueError:
-            print("Por favor, ingrese un número entero.")
+def coleccion_balance_apuesta():
+    """Balance y apuesta simples"""
+    balance = float(input("Ingrese el balance: "))
+    apuesta = float(input("Ingrese la apuesta: "))
+    return {
+        "balance": balance,
+        "apuesta": apuesta
+    }
 
-    if opcion == 1 or opcion == 4 or opcion == 5:
-        print("La apuesta recomendada debe ser entre el 0.33% y 1% del balance")
-    if opcion == 6:
-        secuenciaref = input("Ingrese la secuencia separadas por '-': ")
-        secuenciaref = [int(num) for num in secuenciaref.split('-')]
-        objetivo = sum(secuenciaref)
-        balanceref = 0
-        apuestaref = secuenciaref[0] + secuenciaref[-1]
-    elif opcion == 8:
-        print("""
-Para esta estrategia, se predetermina que la apuesta inicial es de 2
-y el balance inicial es de 0. No introducir -1 en el número de jugadas,
-ya que la secuencia de Fibonacci es infinita.""")
-        balanceref = 0
-        apuestaref = 2
-    if opcion != 6 and opcion != 8:
-        balanceref = float(input("Ingrese el balance: "))
-        apuestaref = float(input("Ingrese la apuesta: "))
-    jugadasref = int(input("Ingrese el numero de jugadas (-1 para infinto): "))
-    simulaciones = int(input("Ingrese el numero de simulaciones: "))
-    compuesto = []
-    apuesta_doblada = apuestaref
+def coleccion_balance_apuesta_doblada_y_apuesta():
+    """Balance, apuesta inicial y apuesta_doblada = apuesta"""
+    balance = float(input("Ingrese el balance: "))
+    apuesta = float(input("Ingrese la apuesta: "))
+    return {
+        "balance": balance,
+        "apuesta": apuesta,
+        "apuesta_doblada": apuesta
+    }
+
+def coleccion_balance_apuesta_doblada_solo():
+    """Balance y apuesta_doblada (sin parámetro 'apuesta' extra)"""
+    balance = float(input("Ingrese el balance: "))
+    apuesta = float(input("Ingrese la apuesta: "))
+    return {
+        "balance": balance,
+        "apuesta_doblada": apuesta
+    }
+
+def coleccion_labouchere():
+    """Secuencia para Labouchere"""
+    raw = input("Ingrese la secuencia (p.ej. 1-2-3-4): ")
+    secuencia = [int(n) for n in raw.split("-") if n.strip().isdigit()]
+    objetivo = sum(secuencia)
+    apuesta = secuencia[0] + secuencia[-1]
+    # Labouchere comienza con balance=0
+    return {
+        "balance": 0.0,
+        "apuesta": apuesta,
+        "secuencia": secuencia,
+        "objetivo": objetivo
+    }
+
+def coleccion_fibonacci():
+    """Fibonacci: apuesta inicial 2, balance inicial 0"""
+    print("Para Fibonacci: apuesta inicial = 2, balance inicial = 0")
+    return {
+        "balance": 0.0,
+        "apuesta": 2.0,
+        "apuestaref": 2.0
+    }
+
+# Mapeo de opciones a configuración de estrategia 
+
+ESTRATEGIAS = {
+    1: {
+        "nombre":   "Martingala",
+        "metodo":   "martingala",
+        "collector": coleccion_balance_apuesta_doblada_y_apuesta,
+        "uses_jugadas": True
+    },
+    2: {
+        "nombre":   "Docena",
+        "metodo":   "docena",
+        "collector": coleccion_balance_apuesta,
+        "uses_jugadas": True
+    },
+    3: {
+        "nombre":   "James Bond",
+        "metodo":   "james_bond",
+        "collector": coleccion_balance_apuesta,
+        "uses_jugadas": True
+    },
+    4: {
+        "nombre":   "D'alembert",
+        "metodo":   "dalembert",
+        "collector": coleccion_balance_apuesta_doblada_solo,
+        "uses_jugadas": True
+    },
+    5: {
+        "nombre":   "Paroli",
+        "metodo":   "paroli",
+        "collector": coleccion_balance_apuesta_doblada_y_apuesta,
+        "uses_jugadas": True
+    },
+    6: {
+        "nombre":   "Labouchere",
+        "metodo":   "labouchere",
+        "collector": coleccion_labouchere,
+        "uses_jugadas": False
+    },
+    7: {
+        "nombre":   "Retarded",
+        "metodo":   "retarded",
+        "collector": coleccion_balance_apuesta,
+        "uses_jugadas": True
+    },
+    8: {
+        "nombre":   "Fibonacci",
+        "metodo":   "fibonacci",
+        "collector": coleccion_fibonacci,
+        "uses_jugadas": True
+    }
+}
+
+def main():
     ruleta = Ruleta()
     estrategias = Estrategia(ruleta)
-    while simulaciones > 0:
-        resultados = []
-        apuesta = apuestaref if apuestaref is not None else 0
-        apuesta_doblada = apuestaref if apuestaref is not None else 0
-        balance = balanceref if balanceref is not None else 0
-        jugadas = jugadasref
-        if secuenciaref is not None:
-            secuencia = secuenciaref.copy()
-        else:
-            secuencia = None
-        resultados.append(balance)
-        if opcion == 1: # Martingala
-            resultados = estrategias.martingala(resultados, jugadas, balance, apuesta_doblada, apuesta)
-        elif opcion == 2: # Docena
-            resultados = estrategias.docena(resultados, jugadas, balance, apuesta)
-        elif opcion == 3: # James Bond
-            resultados = estrategias.james_bond(resultados, jugadas, balance, apuesta)
-        elif opcion == 4: # D'alembert
-            resultados = estrategias.dalembert(resultados, jugadas, balance, apuesta_doblada)
-        elif opcion == 5: # Paroli
-            resultados = estrategias.paroli(resultados, jugadas, balance, apuesta_doblada, apuesta)
-        elif opcion == 6: # Labouchere
-            if secuencia is not None:
-                apuesta_labouchere = float(apuestaref) if apuestaref is not None else 0.0
-                resultados = estrategias.labouchere(resultados, balance, apuesta_labouchere, objetivo, secuencia)
-            else:
-                print("Secuencia no definida para Labouchere.")
+
+    # — Mostrar menú —
+    print("------ MENÚ PRINCIPAL ------")
+    for key, cfg in ESTRATEGIAS.items():
+        print(f"{key}. {cfg['nombre']}")
+    print("Otro. Salir")
+    print("-----------------------------")
+
+    # — Leer opción válida —
+    while True:
+        try:
+            opcion = int(input("Ingrese la estrategia: "))
+            if opcion in ESTRATEGIAS:
                 break
-        elif opcion == 7: # Retarded
-            resultados = estrategias.retarded(resultados, jugadas, balance, apuesta)
-        elif opcion == 8: # Fibonacci
-            apuestaref_fibo = float(apuestaref) if apuestaref is not None else 2.0
-            resultados = estrategias.fibonacci(resultados, jugadas, balance, apuesta, apuestaref_fibo)
+            print("Opción inválida, intente de nuevo.")
+        except ValueError:
+            print("Por favor ingrese un número entero.")
+
+    cfg = ESTRATEGIAS[opcion]
+
+    # — Recoger parámetros específicos —
+    params = cfg["collector"]()
+
+    # — Número de jugadas (si aplica) y simulaciones —
+    if cfg["uses_jugadas"]:
+        jugadas = int(input("Ingrese el número de jugadas (-1 para infinito): "))
+    else:
+        jugadas = None
+
+    simulaciones = int(input("Ingrese el número de simulaciones: "))
+
+    # — Ejecutar simulaciones y almacenar resultados —
+    compuesto = []
+    metodo = getattr(estrategias, cfg["metodo"])
+    for _ in range(simulaciones):
+        resultados = [params["balance"]]
+        params_copy = params.copy()
+        if opcion == 6:
+            params_copy["secuencia"] = params_copy["secuencia"].copy()
+        if cfg["uses_jugadas"]:
+            resultados = metodo(resultados, jugadas, **params_copy)
         else:
-            print("Not implemented yet")
-            break
-        simulaciones -= 1
+            resultados = metodo(resultados, **params_copy)
         compuesto.append(resultados)
+
+    # — Mostrar gráfico —
     plot(compuesto, opcion)
+    graf_media_con_bandas(compuesto)
+
+if __name__ == "__main__":
+    main()
