@@ -28,3 +28,21 @@ class Ruleta:
         numero = random.randrange(37)
         color = self._colores[numero]  # acceso O(1)
         return numero, color
+    
+    def lanzar_sesgado(self, sesgo: float = 0.0):
+        """
+        Lanza la ruleta con un sesgo.
+        El sesgo es un número entre 0 y 1 que indica la probabilidad de que salga una sección específica,
+        en este caso los numeros 5, 24, 16, 33, 1, 0
+        """
+        if not (0 <= sesgo <= 1):
+            raise ValueError("El sesgo debe estar entre 0 y 1.")
+        
+        # Genera un número aleatorio con el sesgo aplicado
+        if random.random() < sesgo:
+            numero = random.choice([5, 24, 16, 33, 1, 0])
+        else:
+            numero = random.randrange(37)
+        
+        color = self._colores[numero]
+        return numero, color

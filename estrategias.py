@@ -186,3 +186,21 @@ class Estrategia:
                 apuesta = fibonacci_sequence[-1] + fibonacci_sequence[-2]
             resultados.append(balance)
         return resultados
+    
+    def pelayo(self, resultados: list, jugadas: int, balance: float, apuesta: float) -> list:
+        """
+        Simula la estrategia de los Pelayo, donde unos numeros ten una probabilidad de salir mayor que otr
+        minima. Solo apuesta a los números 5, 24, 16, 33, 1 y 0.
+        """
+        while jugadas != 0 and balance > 0:
+            balance -= apuesta
+            number, _ = self.ruleta.lanzar_sesgado(sesgo=0.001)
+            if number in {5, 24, 16, 33, 1, 0}:
+                balance += apuesta * 36
+            resultados.append(balance)
+            jugadas -= 1
+        return resultados
+
+            
+            
+            

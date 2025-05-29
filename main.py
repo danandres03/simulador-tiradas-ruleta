@@ -122,6 +122,12 @@ ESTRATEGIAS = {
         "metodo":   "fibonacci",
         "collector": coleccion_fibonacci,
         "uses_jugadas": True
+    },
+    9: {
+        "nombre": "Pelayo",
+        "metodo": "pelayo",
+        "collector": coleccion_balance_apuesta,
+        "uses_jugadas": True
     }
 }
 
