@@ -155,9 +155,9 @@ class Estrategia:
             resultados.append(balance)
         return resultados
 
-    def retarded(self, resultados: list, jugadas: int, balance: float, apuesta: float)-> list:
+    def stupid(self, resultados: list, jugadas: int, balance: float, apuesta: float)-> list:
         """
-        Simula la estrategia de Retarded
+        Simula la estrategia de stupid
         """
         while jugadas != 0:
             balance -= apuesta

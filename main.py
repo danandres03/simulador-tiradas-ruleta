@@ -7,7 +7,7 @@ Las estrategias disponibles son:
 - D'alembert
 - Paroli (Inverse Martingale)
 - Labouchere
-- Retarded
+- stupid
 - Fibonacci
 
 Se pide al usuario que decida la estrategia e ingrese los datos necesarios para la simulación.
@@ -116,8 +116,8 @@ ESTRATEGIAS = {
         "uses_jugadas": False
     },
     7: {
-        "nombre":   "Retarded",
-        "metodo":   "retarded",
+        "nombre":   "Stupid",
+        "metodo":   "stupid",
         "collector": coleccion_balance_apuesta,
         "uses_jugadas": True
     },

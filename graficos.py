@@ -14,7 +14,7 @@ def plot(resultados: list, opcion: int) -> None:
         4: 'D\'alembert',
         5: 'Paroli',
         6: 'Labouchere',
-        7: 'Retarded',
+        7: 'stupid',
         8: 'Fibonacci'
     }
     estrategia = estrategias.get(opcion, 'Otra')
