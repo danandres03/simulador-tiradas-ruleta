@@ -38,11 +38,22 @@ class Ruleta:
         if not (0 <= sesgo <= 1):
             raise ValueError("El sesgo debe estar entre 0 y 1.")
         
-        # Genera un número aleatorio con el sesgo aplicado
-        if random.random() < sesgo:
-            numero = random.choice([5, 24, 16, 33, 1, 0])
-        else:
-            numero = random.randrange(37)
-        
+        numeros_sesgados = {5, 24, 16, 33, 1, 0}
+        total_numeros = 37
+        p_base = 1 / total_numeros
+
+        # Distribución de probabilidades con sesgo sumando a los sesgados
+        p_sesgado = p_base + sesgo
+        suma_sesgados = p_sesgado * len(numeros_sesgados)
+        p_otros = (1 - suma_sesgados) / (total_numeros - len(numeros_sesgados))
+
+        if p_otros < 0:
+            raise ValueError("El sesgo es demasiado alto y rompe la distribución de probabilidad.")
+
+        # Generar la lista de probabilidades
+        numeros = list(range(37))
+        probabilidades = [p_sesgado if n in numeros_sesgados else p_otros for n in numeros]
+
+        numero = random.choices(numeros, weights=probabilidades)[0]
         color = self._colores[numero]
         return numero, color

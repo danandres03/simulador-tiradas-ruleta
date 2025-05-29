@@ -52,14 +52,23 @@ def plot(resultados: list, opcion: int) -> None:
     ax.set_xlabel("Tiradas de Ruleta")
     ax.set_ylabel("Balance")
 
-    # Leyenda fuera del plot
-    ax.legend(
-        loc='upper left',
-        bbox_to_anchor=(1.02, 1),
-        borderaxespad=0,
-        frameon=True,
-        title="Simulaciones"
-    )
+    # Leyenda fuera del plot si no hay demasiadas simulaciones, si hay muchas, la leyenda es generica,
+    # diciendo que las lineas representan simulaciones
+    if len(resultados) <= 10:
+        ax.legend(
+            loc='upper left',
+            bbox_to_anchor=(1.02, 1),
+            borderaxespad=0,
+            frameon=True,
+            title="Simulaciones"
+        )
+    else:
+        ax.text(
+            1.02, 1, "Cada línea representa una simulación",
+            transform=ax.transAxes, fontsize=10,
+            verticalalignment='top', bbox=dict(boxstyle="round", alpha=0.1)
+        )
+        ax.legend().remove()  # Elimina la leyenda si es genérica
 
     # Ajuste de márgenes
     fig.tight_layout()

@@ -194,7 +194,7 @@ class Estrategia:
         """
         while jugadas != 0 and balance > 0:
             balance -= apuesta
-            number, _ = self.ruleta.lanzar_sesgado(sesgo=0.001)
+            number, _ = self.ruleta.lanzar_sesgado(sesgo=0.005)
             if number in {5, 24, 16, 33, 1, 0}:
                 balance += apuesta * 36
             resultados.append(balance)
