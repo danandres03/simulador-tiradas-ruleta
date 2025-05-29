@@ -39,6 +39,7 @@ Este simulador permite probar diferentes estrategias de apuestas en la ruleta, c
   6. Labouchere
   7. Stupid
   8. Fibonacci
+  9. Pelayo
 - Configuración dinámica de parámetros (balance, apuesta, secuencia, jugadas, simulaciones).
 - Gráficas de trayectorias y confianza.
 - Cálculos estadísticos con Polars para aprovechar multithreading.
@@ -99,7 +100,7 @@ python main.py
 Cada estrategia ofrece distintos requisitos de entrada:
 
 - **Martingala, D'Alembert, Paroli**: balance, apuesta, apuesta doblada inicial = apuesta.
-- **Docena, James Bond, Stupid**: balance, apuesta fija.
+- **Docena, James Bond, Stupid, Pelayo**: balance, apuesta fija.
 - **Labouchere**: secuencia de números (p.ej. `1-2-3-4`), balance inicial = 0.
 - **Fibonacci**: apuesta inicial fijo = 2, balance inicial = 0.
 
